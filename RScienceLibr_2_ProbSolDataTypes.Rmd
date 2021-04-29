@@ -1,0 +1,290 @@
+---
+title: "Programming for Analysis with R Part II"
+author: "Fred LaPolla"
+date: "May 10, 2021"
+output: slidy_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+***
+
+## Objectives
+
+Students will be able to:
+ 
+>- Identify sources for troubleshooting
+>- Identify data types that R works with
+>- Recod the data type of an object
+
+***
+
+## Pulling in the data
+
+```{r}
+library(RCurl)
+url <- getURL("https://raw.githubusercontent.com/fredlapolla/RScience2021_libr/main/NYC_HANES_DIAB.csv")
+nyc <- read.csv(text = url)
+```
+
+***
+
+## Problem Solving
+
+</br>
+</br>
+</br>
+
+There are too many commands in R to memorize them, also there is no need to do this and literally no one memorizes all the commands they use. 
+
+***
+
+## Problem Solving
+
+</br>
+</br>
+</br>
+
+R is case sensitive!
+
+***
+
+## Problem Solving
+
+</br>
+</br>
+</br>
+
+R is a machine! It won't know what you mean!
+
+***
+
+## Problem Solving
+
+</br>
+</br>
+</br>
+
+Look for **typos!**
+
+This can mean extra commas, periods, and parentheses that don't close. Sometimes the error message will clue you in, other times (most times?) not. 
+
+***
+
+## Problem Solving
+
+</br>
+</br>
+</br>
+
+If the console presents a blinking plus sign:
+
+'+
+
+after running a command, hit **ESC.**
+
+The plus sign means some set of parentheses or quotes was not closed
+
+***
+
+## Problem Solving
+
+</br>
+</br>
+</br>
+
+When in doubt, Google it. 
+
+
+Literally no one memorizes more than a handful of commands, and most of the time you will need to look up the specific syntax. 
+
+***
+
+## Problem Solving
+
+</br>
+</br>
+</br>
+
+My two favorite sites:
+
+
+>- Stack Overflow: a site where people pose questions and others try to answer them. https://stackoverflow.com/questions/
+
+>- Quick-R by DataCamp: Descriptions of how to do the regular things you may attempt in R. https://www.statmethods.net/stats/frequencies.html 
+
+***
+
+
+
+## Packages
+
+</br>
+</br>
+</br>
+
+Often the thing you want to do does not come with "out of the box" R (or you could do it but it's difficult)
+
+***
+
+## Packages
+
+
+Typically you will learn about these in articles like those on Stack Exchange, but some we will talk about here. The Tidyverse, a set of packages created by Hadley Wickham, are pretty common for data cleaning, analysis and visualization. 
+
+***
+
+## Packages
+
+
+Try installing it!
+
+```{r}
+install.packages("tidyverse",  repos = "http://cran.us.r-project.org")
+library(tidyverse)
+```
+
+***
+
+## Packages
+
+
+This gives you lots of nice tools for data cleaning and wrangling. 
+
+```{r echo=TRUE}
+hasDiab <- filter(nyc, DX_DBTS == 1)
+head(hasDiab)
+```
+
+***
+
+## Data Types in R
+
+</br>
+</br>
+</br>
+
+R works with several types of data. Think of these as the sorts of things that appear in a given cell in a spreadsheet. 
+
+>- Character
+>- Numeric
+>- Integer
+>- Factor (i.e. categorical or ordinal variable)
+>- Logical (T/F)
+>- Complex (think the imaginary number i)
+
+***
+
+## Character
+
+
+</br>
+</br>
+</br>
+
+Character data means that R is treating text like it is words. 
+
+Imagine we created a spreadsheet of members of your lab. Everyone's name would be a character: Eg "Fred"
+
+**Note of caution:** sometimes R reads in data in ways that we do not want it to, if it sees even one random letter (say a typo) in a column of numbers it will treat that as a character. Sometimes it will read in character strings as a great deal of factor values. 
+
+***
+
+## Numeric and Integer
+
+</br>
+
+
+>- Numeric data is any number e.g. 12, 13.5 etc.
+>- Integer data is a rounded integer and is written with an L: e.g. 12L 13L etc.
+>- **Important** Sometimes what appears to us as a number is being read as a character. It will appear with quotes as "12" or "13.5" to let us know R is not reading it as a number. 
+
+***
+
+## Factor
+
+</br>
+</br>
+</br>
+
+A factor variable is a value that can have one of several options, e.g. Place of residence: Manhattan, Brooklyn, the Bronx, Queens, Staten Island, Other. 
+
+In R, factor variables can be ordered, e.g. First year, Second Year, Third Year students. These are often called ordinal variables.  Factors can also be unordered like in the NYC boros above. 
+
+***
+
+## Factor Levels and Labels
+
+</br>
+</br>
+</br>
+
+When you work with factor variables, the different choices are called "levels." You can rename levels using a levels() command, but it is important that the order of the levels match the existing order. 
+
+```{r}
+nyc$GENDER <- factor(nyc$GENDER, levels = 1:2)
+summary(nyc$GENDER)
+```
+
+
+```{r}
+levels(nyc$GENDER) <- c("Male", "Female")
+summary(nyc$GENDER)
+```
+
+***
+
+## Alternate approach with Labels
+
+You can also do this with labels for the levels. 
+
+An "in the weeds" explanation: Levels and labels are not the same as in SPSS, what this is doing is looking at the AGEGROUP column, saying that the groups (or levels) for this group are the integers 1,2,3, and then assigning as a name the Youth, Middle and Aged labels. 
+
+```{r}
+nyc$AGEGROUP <- factor(nyc$AGEGROUP, levels = 1:3, labels = c("Youth", "Middle", "Aged"))
+summary(nyc$AGEGROUP)
+```
+
+
+**Note:** Similar to the examples above, sometimes R reads in character strings as factors. If your cell/gene IDs are listing with "levels" you may have to change the type of data. 
+
+***
+
+## Logical
+
+</br>
+</br>
+</br>
+
+R understands TRUE and FALSE as concepts. 
+
+TRUE is equivalent to 1 and FALSE to 0. 
+
+This means you can find sums of arguments that meet criteria to see how many are true, or you can use means to find proportions. An example of finding the proportion can be seen:
+
+```{r}
+mean(nyc$SPAGE < 50)
+```
+
+To find the proportion of people under 50. This is because "nyc$SPAGE<50" runs through every value in the column and assigns TRUE, i.e. 1, if they are younger than 50, and FALSE, 0, if over 50. So mean is the same as summing all those ones and dividing by the total, which is the same as finding a proportion. 
+
+
+***
+
+## Determining the data type
+
+</br>
+</br>
+</br>
+
+If you run class() on a column of data, you will get the data type of that column:
+
+```{r}
+class(nyc$AGEGROUP)
+```
+
+
