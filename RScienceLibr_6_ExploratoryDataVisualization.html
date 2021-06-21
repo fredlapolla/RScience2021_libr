@@ -6,7 +6,7 @@
   <meta http-equiv="Content-Style-Type" content="text/css" />
   <meta name="generator" content="pandoc" />
   <meta name="author" content="Fred LaPolla" />
-  <meta name="date" content="2021-06-14" />
+  <meta name="date" content="2021-06-21" />
   <title>R Coding VI: Exploratory Data Visualization</title>
   <style type="text/css">
     code{white-space: pre-wrap;}
@@ -513,7 +513,7 @@ list-style-type: none;
   <p class="author">
 Fred LaPolla
   </p>
-  <p class="date">June 14, 2021</p>
+  <p class="date">June 21, 2021</p>
 </div>
 <div id="data-visualization" class="title-slide slide section level1"><h1>Data Visualization</h1></div><div id="objectives" class="slide section level2">
 <h1>Objectives</h1>
@@ -528,16 +528,14 @@ Fred LaPolla
 </div><div id="getting-started" class="slide section level2">
 <h1>Getting started</h1>
 <p>Let’s pull in our same NYC HANES data set.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(RCurl)</span>
-<span id="cb1-2"><a href="#cb1-2"></a>url &lt;-<span class="kw">getURL</span>(<span class="st">&quot;https://raw.githubusercontent.com/fredlapolla/RScience2021_libr/master/NYC_HANES_DIAB.csv&quot;</span>)</span>
-<span id="cb1-3"><a href="#cb1-3"></a>nyc &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="dt">text =</span> url)</span>
-<span id="cb1-4"><a href="#cb1-4"></a></span>
-<span id="cb1-5"><a href="#cb1-5"></a>nyc<span class="op">$</span>AGEGROUP &lt;-<span class="st"> </span><span class="kw">factor</span>(nyc<span class="op">$</span>AGEGROUP, <span class="dt">levels =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;Youngest&quot;</span>, <span class="st">&quot;Middle&quot;</span>, <span class="st">&quot;Aged&quot;</span>))</span>
-<span id="cb1-6"><a href="#cb1-6"></a>nyc<span class="op">$</span>GENDER &lt;-<span class="st"> </span><span class="kw">factor</span>(nyc<span class="op">$</span>GENDER, <span class="dt">levels =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>, <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;male&quot;</span>, <span class="st">&quot;female&quot;</span>))</span>
-<span id="cb1-7"><a href="#cb1-7"></a><span class="co"># Rename the HSQ_1 factor for identification</span></span>
-<span id="cb1-8"><a href="#cb1-8"></a>  nyc<span class="op">$</span>HSQ_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">factor</span>(nyc<span class="op">$</span>HSQ_<span class="dv">1</span>, <span class="dt">levels =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;Excellent&quot;</span>,<span class="st">&quot;Very Good&quot;</span>,<span class="st">&quot;Good&quot;</span>, <span class="st">&quot;Fair&quot;</span>, <span class="st">&quot;Poor&quot;</span>))</span>
-<span id="cb1-9"><a href="#cb1-9"></a>  <span class="co"># Rename the DX_DBTS as a factor</span></span>
-<span id="cb1-10"><a href="#cb1-10"></a>  nyc<span class="op">$</span>DX_DBTS &lt;-<span class="st"> </span><span class="kw">factor</span>(nyc<span class="op">$</span>DX_DBTS,<span class="dt">levels =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;Diabetes with DX&quot;</span>,<span class="st">&quot;Diabetes with no DX&quot;</span>,<span class="st">&quot;No Diabetes&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>nyc &lt;-<span class="kw">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/fredlapolla/RScience2021_libr/master/NYC_HANES_DIAB.csv&quot;</span>)</span>
+<span id="cb1-2"><a href="#cb1-2"></a></span>
+<span id="cb1-3"><a href="#cb1-3"></a>nyc<span class="op">$</span>AGEGROUP &lt;-<span class="st"> </span><span class="kw">factor</span>(nyc<span class="op">$</span>AGEGROUP, <span class="dt">levels =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;Youngest&quot;</span>, <span class="st">&quot;Middle&quot;</span>, <span class="st">&quot;Aged&quot;</span>))</span>
+<span id="cb1-4"><a href="#cb1-4"></a>nyc<span class="op">$</span>GENDER &lt;-<span class="st"> </span><span class="kw">factor</span>(nyc<span class="op">$</span>GENDER, <span class="dt">levels =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>, <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&quot;male&quot;</span>, <span class="st">&quot;female&quot;</span>))</span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="co"># Rename the HSQ_1 factor for identification</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a>  nyc<span class="op">$</span>HSQ_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">factor</span>(nyc<span class="op">$</span>HSQ_<span class="dv">1</span>, <span class="dt">levels =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;Excellent&quot;</span>,<span class="st">&quot;Very Good&quot;</span>,<span class="st">&quot;Good&quot;</span>, <span class="st">&quot;Fair&quot;</span>, <span class="st">&quot;Poor&quot;</span>))</span>
+<span id="cb1-7"><a href="#cb1-7"></a>  <span class="co"># Rename the DX_DBTS as a factor</span></span>
+<span id="cb1-8"><a href="#cb1-8"></a>  nyc<span class="op">$</span>DX_DBTS &lt;-<span class="st"> </span><span class="kw">factor</span>(nyc<span class="op">$</span>DX_DBTS,<span class="dt">levels =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;Diabetes with DX&quot;</span>,<span class="st">&quot;Diabetes with no DX&quot;</span>,<span class="st">&quot;No Diabetes&quot;</span>))</span></code></pre></div>
 <p>There are two major reasons we might want to visualize our data: exploration and communication.</p>
 </div><div id="data-exploration" class="slide section level2">
 <h1>Data Exploration</h1>
@@ -622,8 +620,6 @@ Fred LaPolla
 </div><div id="group-work-2" class="slide section level2">
 <h1>Group Work</h1>
 <p>Make a qq plot of LDL. Also make one for MercuryU. Would you expect either of these to be normal or skewed? How can you tell?</p>
-</div><div class="slide section level2">
-
 </div><div id="correlations-scatter-plots" class="slide section level2">
 <h1>Correlations &amp; Scatter Plots</h1>
 <p></br> </br> </br></p>

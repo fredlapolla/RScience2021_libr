@@ -1,7 +1,7 @@
 ---
 title: 'R Coding VI: Exploratory Data Visualization'
 author: "Fred LaPolla"
-date: "June 14, 2021"
+date: "June 21, 2021"
 output: slidy_presentation
 ---
 
@@ -33,9 +33,8 @@ Students will be able to:
 Let's pull in our same NYC HANES data set. 
 
 ```{r, echo = TRUE}
-library(RCurl)
-url <-getURL("https://raw.githubusercontent.com/fredlapolla/RScience2021_libr/master/NYC_HANES_DIAB.csv")
-nyc <- read.csv(text = url)
+
+nyc <-read.csv("https://raw.githubusercontent.com/fredlapolla/RScience2021_libr/master/NYC_HANES_DIAB.csv")
 
 nyc$AGEGROUP <- factor(nyc$AGEGROUP, levels = 1:3, labels = c("Youngest", "Middle", "Aged"))
 nyc$GENDER <- factor(nyc$GENDER, levels = 1:2, labels = c("male", "female"))
@@ -212,13 +211,6 @@ Make a qq plot of LDL. Also make one for MercuryU. Would you expect either of th
 ```{r}
 
 ```
-
-
-
-
-
-
-***
 
 
 
